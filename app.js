@@ -11,6 +11,12 @@ var peerList = [];
 var hostPeer = null;
 var isHost = null;
 
+function MessageAdd(message) {
+	var chat_messages = document.getElementById("chat-messages");
+
+	chat_messages.insertAdjacentHTML("beforeend", "<p>" + message + "</p>");
+	chat_messages.scrollTop = chat_messages.scrollHeight;
+}
 
 function bindEvents(p) {
 
@@ -20,11 +26,14 @@ function bindEvents(p) {
     })
 
     p.on('data', data => {
-        console.log('data: ' + data)
+        console.log('data: ' + data);
+        MessageAdd("other : " +data);
         // On renvoit les datas recues a tout les peer
         if (isHost) {
             for (let i = 0; i < peerList.length - 1; i++) {
-                peerList[i].send(data);
+                if (peerList[i] !== p) {
+                    peerList[i].send(data);
+                }
             }
         }
       })
@@ -34,7 +43,6 @@ function bindEvents(p) {
     });
 
     p.on('signal', function (data) {
-        console.log("SIGNAL");
         //Se triger quand on crée un peer -> JSON.stringify(data) contient notre offer
         if (isHost) {
             ws.send(JSON.stringify(
@@ -60,10 +68,6 @@ function strartPerr (initiator) {
         initiator: initiator,
         trickle: false,
     })
-    // for (let i = 0; i < peerList.length; i++) {
-    //     bindEvents(peerList[i]);
-    // }
-    // peerList.push(p);
     bindEvents(p);
     return (p);
 };
@@ -87,10 +91,8 @@ ws.addEventListener("message", (e) => {
         joinedRoom = obj.roomName;
         isHost = false;
         let p = strartPerr(isHost);
-        // peerList.push(p);
         p.signal(obj.offer);
         hostPeer = p;
-
     } else if (obj.type === "recieveClientOffer") {
         peerList[peerList.length - 1].signal(JSON.parse(obj.offer));
         // Recréer un peer et envoyer notre offre au server
@@ -123,9 +125,9 @@ document.querySelector('#joinRoom').addEventListener('click', function (e) {
 
 document.querySelector('#sendMsg').addEventListener('click', function (e) {
         console.log("Message to send : " + msg.value);
+        MessageAdd("me    : " + msg.value);
         if (isHost) {
             for (let i = 0; i < peerList.length - 1; i++) {
-                console.log("peer to contact : " + peerList[i]);
                 peerList[i].send(msg.value);
             }
         } else {
@@ -133,8 +135,4 @@ document.querySelector('#sendMsg').addEventListener('click', function (e) {
                 hostPeer.send(msg.value);
             }
         }
-
-        // if (p !== null) {
-        //     p.send(msg.value);
-        // }
 })
