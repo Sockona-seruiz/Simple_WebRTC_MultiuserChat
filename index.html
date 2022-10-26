@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket_WebRTC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+
+<style>
+    body {
+        padding-top: 5rem;
+    }
+</style>
+
+<body>
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">Test webRTC</a>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-6">
+                <h2>Message</h2>
+                <input type="text" id="msginput" name="text">
+                <p>
+                    <button id="sendMsg">Send message</button>
+                </p>
+            </div>
+
+
+            <div class="col-sm-6">
+                <h2>Room Selection</h2>
+                <input type="text" id="roomName" name="text">
+                <p>
+                    <button id="createRoom">Create Room</button>
+                    <button id="joinRoom">Join Room</button>
+                </p>
+                <!-- <textarea id="offer"></textarea> -->
+            </div>
+
+            <!-- <div class="col-sm-6">
+                <h2>Envoi</h2>
+                <form id="incomming">
+                    <div class="form-group">
+                        <textarea class="form-control"></textarea>
+                    </div>
+                    <p>
+                        <button type="submit">Enregistrer l'offre</button>
+                    </p>
+                </form>
+            </div> -->
+        </div>
+    </div>
+
+    <script src="simplepeer.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
