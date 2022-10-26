@@ -51,7 +51,21 @@ wss.on("connection", ws => {
                         sucess: false,
                     }));              
             }
-            // Stocker l'offre host
+        } else if (obj.type === "leave") {
+            if (obj.isHost) {
+                console.log("Host wants to leave " + obj.roomName);
+                rooms[obj.roomName] = null;
+                hostOffers[obj.roomName] = null;
+            } else {
+                console.log("User wants to leave " + obj.roomName);
+                rooms[obj.roomName].send(JSON.stringify(
+                    {
+                        type: "clientLeftRoom",
+                        roomName: obj.roomName,
+                        peer: obj.peer,
+                    }));
+            }
+
         } else if (obj.type === "hostOffer") {
             hostOffers[obj.roomName] = obj.offer;
             console.log("storing " + obj.roomName + " host offer");
