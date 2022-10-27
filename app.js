@@ -228,5 +228,6 @@ document.querySelector('#sendMsg').addEventListener('click', function (e) {
                         }));
                 }
             }
+            msg.value = "";
         }
 })
