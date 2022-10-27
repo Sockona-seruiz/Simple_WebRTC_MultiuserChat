@@ -46,7 +46,7 @@ function bindEvents(p) {
         p.send(JSON.stringify(
             {
                 type: "msg",
-                message: "Connection Established !",
+                message: "Someone entered " + joinedRoom + " room !",
             }));
     })
 
@@ -73,6 +73,7 @@ function bindEvents(p) {
             hostPeer = null;
             isHost = null;
             toogleButtonHidden(false);
+            MessageAdd("other : The host destroyed the room");
         }
       })
 
@@ -147,12 +148,18 @@ ws.addEventListener("message", (e) => {
         console.log(obj.peer.channelName);
         for (let i = 0; i < peerList.length - 1; i++) {
             // console.log(peerList[i]);
+            peerList[i].send(JSON.stringify(
+            {
+                    type: "msg",
+                    message: "Someone left " + joinedRoom + " room",
+            }));
             console.log(peerList[i].channelName);
             if (peerList[i].channelName === obj.peer.channelName) {
                 console.info("User removed from list");
                 peerList.splice(i, 1);
             }
         }
+        MessageAdd("me    : Someone left " + joinedRoom + " room");
     }
 });
 
@@ -179,13 +186,13 @@ document.querySelector('#leaveRoom').addEventListener('click', function (e) {
         // On contacte tout les peer pour leur dire de leave la room
         // On ne peut pas envoyer de message vide du coup
         // message vide = clore la room
-        console.log("send empty string");
         for (let i = 0; i < peerList.length - 1; i++) {
             peerList[i].send(JSON.stringify(
                 {
                     type: "leave",
                 }));
         }
+        MessageAdd("me   : You destroyed the room");
         peerList = [];
     }
     ws.send(JSON.stringify(
